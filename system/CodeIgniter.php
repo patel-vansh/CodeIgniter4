@@ -297,6 +297,10 @@ class CodeIgniter
 
         $this->sendResponse();
 
+        Events::trigger('post_response');
+
+        // We can use defer callbacks here.
+
         return null;
     }
 
