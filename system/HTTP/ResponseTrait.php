@@ -392,11 +392,11 @@ trait ResponseTrait
 
     private function finishResponse(): void
     {
-        if (\function_exists('fastcgi_finish_request')) {
+        if (function_exists('fastcgi_finish_request')) {
             fastcgi_finish_request();
-        } elseif (\function_exists('litespeed_finish_request')) {
+        } elseif (function_exists('litespeed_finish_request')) {
             litespeed_finish_request();
-        } elseif (!\in_array(\PHP_SAPI, ['cli', 'phpdbg', 'embed'], true)) {
+        } elseif (!in_array(PHP_SAPI, ['cli', 'phpdbg', 'embed'], true)) {
             $this->closeOutputBuffers();
             flush();
         }
@@ -405,8 +405,8 @@ trait ResponseTrait
     private function closeOutputBuffers(): void
     {
         $status = ob_get_status(true);
-        $level = \count($status);
-        $flags = \PHP_OUTPUT_HANDLER_REMOVABLE | \PHP_OUTPUT_HANDLER_FLUSHABLE;
+        $level = count($status);
+        $flags = PHP_OUTPUT_HANDLER_REMOVABLE | PHP_OUTPUT_HANDLER_FLUSHABLE;
 
         while ($level-- > 0 && ($s = $status[$level]) && (!isset($s['del']) ? !isset($s['flags']) || ($s['flags'] & $flags) === $flags : $s['del'])) {
             ob_end_flush();
