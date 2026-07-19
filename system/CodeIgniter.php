@@ -14,6 +14,7 @@ namespace CodeIgniter;
 use Closure;
 use CodeIgniter\Cache\ResponseCache;
 use CodeIgniter\Debug\Timer;
+use CodeIgniter\Defer\Defer;
 use CodeIgniter\Events\Events;
 use CodeIgniter\Exceptions\LogicException;
 use CodeIgniter\Exceptions\PageNotFoundException;
@@ -299,7 +300,7 @@ class CodeIgniter
 
         Events::trigger('post_response');
 
-        // We can use defer callbacks here.
+        Defer::run();
 
         return null;
     }
