@@ -19,6 +19,7 @@ use CodeIgniter\Context\Context;
 use CodeIgniter\Cookie\Cookie;
 use CodeIgniter\Cookie\CookieStore;
 use CodeIgniter\Cookie\Exceptions\CookieException;
+use CodeIgniter\Defer\Defer;
 use CodeIgniter\Database\BaseConnection;
 use CodeIgniter\Database\ConnectionInterface;
 use CodeIgniter\Debug\Timer;
@@ -396,6 +397,18 @@ if (! function_exists('db_connect')) {
     function db_connect($db = null, bool $getShared = true)
     {
         return Database::connect($db, $getShared);
+    }
+}
+
+if (! function_exists('defer')) {
+    /**
+     * Adds a callback to be executed after the response has been sent.
+     *
+     * @param callable $callback
+     */
+    function defer(callable $callback): void
+    {
+        Defer::add($callback);
     }
 }
 
