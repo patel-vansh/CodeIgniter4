@@ -16,6 +16,7 @@ namespace CodeIgniter;
 use CodeIgniter\Config\BaseService;
 use CodeIgniter\Config\Factories;
 use CodeIgniter\Config\Services as CodeIgniterServices;
+use CodeIgniter\Defer\Defer;
 use CodeIgniter\Exceptions\RuntimeException;
 use CodeIgniter\HTTP\CLIRequest;
 use CodeIgniter\HTTP\Exceptions\RedirectException;
@@ -881,5 +882,20 @@ final class CommonFunctionsTest extends CIUnitTestCase
         service('context')->set('foo', 'bar');
 
         $this->assertSame('bar', context()->get('foo'));
+    }
+
+    public function testDefer(): void
+    {
+        Defer::reset();
+
+        $called = false;
+
+        defer(function () use (&$called) {
+            $called = true;
+        });
+
+        $this->assertFalse($called);
+        Defer::run();
+        $this->assertTrue($called);
     }
 }

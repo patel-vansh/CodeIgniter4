@@ -17,6 +17,8 @@ use App\Controllers\Home;
 use CodeIgniter\Config\Factories;
 use CodeIgniter\Config\Services;
 use CodeIgniter\Debug\Timer;
+use CodeIgniter\Defer\Defer;
+use CodeIgniter\Events\Events;
 use CodeIgniter\Exceptions\PageNotFoundException;
 use CodeIgniter\HTTP\Method;
 use CodeIgniter\HTTP\Response;
@@ -1327,5 +1329,56 @@ final class CodeIgniterTest extends CIUnitTestCase
         $this->assertNull(RichRenderer::$js_nonce);
         $this->assertNull(RichRenderer::$css_nonce);
         $this->assertTrue(RichRenderer::$needs_pre_render);
+    }
+
+    public function testDeferCallbacks(): void
+    {
+        $this->resetServices();
+        Defer::reset();
+
+        $codeigniter = new MockCodeIgniter(new App());
+
+        $called = false;
+
+        Defer::add(function () use (&$called) {
+            $called = true;
+        });
+
+        ob_start();
+        $codeigniter->run();
+        ob_get_clean();
+
+        $this->assertTrue($called);
+    }
+
+    public function testDeferCallbacksRunAfterPostResponse(): void
+    {
+        $this->resetServices();
+        Events::removeAllListeners();
+        Defer::reset();
+
+        $codeigniter = new MockCodeIgniter(new App());
+
+        $eventCalled = false;
+        $callbackCalled = false;
+
+        $eventWasTriggeredFirst = false;
+
+        Events::on('post_response', static function () use (&$eventCalled) {
+            $eventCalled = true;
+        });
+
+        Defer::add(function () use (&$callbackCalled, &$eventCalled, &$eventWasTriggeredFirst) {
+            $eventWasTriggeredFirst = $eventCalled;
+            $callbackCalled = true;
+        });
+
+        ob_start();
+        $codeigniter->run();
+        ob_get_clean();
+
+        $this->assertTrue($eventCalled);
+        $this->assertTrue($callbackCalled);
+        $this->assertTrue($eventWasTriggeredFirst);
     }
 }
