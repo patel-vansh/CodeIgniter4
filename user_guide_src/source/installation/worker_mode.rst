@@ -112,6 +112,8 @@ Installation
 
 .. note:: When changing the project directory, see the section :ref:`renaming-app-directory` and update your **public/frankenphp-worker.php**.
 
+.. note:: CodeIgniter 4.8.0 adds Defer callbacks support. If your application uses Worker Mode, you may need to update your **public/frankenphp-worker.php** file to include the new ``Defer::reset()`` call. See the :ref:`upgrade_480` section for details.
+
 Running the Worker
 ==================
 

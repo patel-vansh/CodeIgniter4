@@ -127,6 +127,9 @@ while (frankenphp_handle_request($handler)) {
     // Reset event listeners
     Events::cleanupForWorkerMode($workerConfig->resetEventListeners);
 
+    // Reset defer callbacks
+    Defer::reset();
+
     if (CI_DEBUG) {
         Services::toolbar()->reset();
     }

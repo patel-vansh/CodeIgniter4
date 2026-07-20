@@ -94,6 +94,12 @@ Error Views
 - app/Views/errors/html/error_report.php
     - Added a Markdown error report partial used by the **Copy Details** button.
 
+Worker Mode
+-----------
+
+- public/frankenphp-worker.php
+    - Added ``Defer::reset()`` for resetting deferred callbacks when running in Worker Mode.
+
 All Changes
 ===========
 
