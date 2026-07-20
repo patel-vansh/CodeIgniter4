@@ -24,4 +24,9 @@ class Defer
             }
         }
     }
+
+    public static function reset(): void
+    {
+        self::$callbacks = [];
+    }
 }
